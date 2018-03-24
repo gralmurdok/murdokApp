@@ -13,10 +13,13 @@ class QueryService {
         return ChannelActions.getChannelsList()
           .then(channels => MessageService.formatChannels(channels.map(ch => ch.id)));
       case 'water':
-        // return Database.getFromCollection('test', {})
-        //   .then(response => MessageService.formatMessage(response[0].command));
+        const messageProps = {
+          pretext: 'The next couple selected to grab ioet\'s water are:',
+          color: '#439FE0'
+        }
+
         return getNextWaterCouple.resolveAction({channel: reqProps.channelId})
-          .then(waterCouple => MessageService.formatUsers(waterCouple));
+          .then(waterCouple => MessageService.formatWaterCoupleUsers(waterCouple, messageProps));
     }
   }
 }

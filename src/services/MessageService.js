@@ -1,10 +1,14 @@
 class MessageService {
 
-  static formatMessage(text) {
+  static formatMessage(text, msgProps) {
+
     return {
       response_type: 'in_channel',
-      text
-    }
+      text,
+      attachments: [
+        msgProps
+      ]
+    };
   }
 
   static formatChannels(arrayMessage) {
@@ -13,10 +17,11 @@ class MessageService {
     return this.formatMessage(result);
   }
 
-  static formatUsers(arrayMessage) {
+  static formatWaterCoupleUsers(arrayMessage, msgProps) {
     const formatted = arrayMessage.map(str => `<@${str}>`);
     const result = formatted.join('\n')
-    return this.formatMessage(result);
+    msgProps.text = result;
+    return this.formatMessage('', msgProps);
   }
 }
 
