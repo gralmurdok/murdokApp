@@ -7,7 +7,7 @@ class MessageService {
     }
   }
 
-  static formatArrayMessage(arrayMessage) {
+  static formatChannels(arrayMessage) {
     const formatted = arrayMessage.map(str => `<#${str}>`);
     const result = formatted.join('\n')
     return this.formatMessage(result);
