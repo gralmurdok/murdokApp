@@ -12,7 +12,7 @@ class QueryService {
       case 'channels':
         return ChannelActions.getChannelsList()
           .then(channels => MessageService.formatChannels(channels.map(ch => ch.id)));
-      case 'getNextWaterMan':
+      case 'water':
         // return Database.getFromCollection('test', {})
         //   .then(response => MessageService.formatMessage(response[0].command));
         return getNextWaterCouple.resolveAction({channel: reqProps.channelId})

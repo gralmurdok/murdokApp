@@ -28,11 +28,23 @@ class Database {
           console.log(err);
           return reject(err);
         }
-        console.log('found');
-        console.log(response);
+
         return resolve(response); 
       });
     });
+  }
+
+  static dumpCollection(collection) {
+    return new Promise((resolve, reject) => {
+      database.collection(collection).remove((err, response) => {
+        if(err) {
+          console.log(err);
+          return reject(err);
+        }
+
+        return resolve({}); 
+      });
+    }); 
   }
 }
 

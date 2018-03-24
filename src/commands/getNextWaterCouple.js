@@ -1,4 +1,5 @@
 import ChannelActions from '../actions/ChannelActions';
+import Database from '../database/Database';
 
 class getNextWaterCouple {
   static resolveAction(action) {
@@ -9,7 +10,23 @@ class getNextWaterCouple {
 
   static getNextCouple(channel) {
     return ChannelActions.getChannelUsers(channel)
-      .then(users => this.getRandomCouple(users));
+      .then(users => {
+        return Database.getFromCollection('ioetWaterPeople')
+          .then((choosenOnes = []) => {
+            console.log(choosenOnes);
+            const existingIds = choosenOnes.map(usr => usr.usr);
+            const validUsers = users.filter(usr => existingIds.indexOf(usr) === -1);
+            const newCouple = this.getRandomCouple(validUsers).filter(x => !!x); 
+
+            if(newCouple.length) {
+              return Promise.all(newCouple.map(usr => Database.saveToCollection('ioetWaterPeople', {usr})))
+                .then(() => newCouple);
+            }
+
+            return Database.dumpCollection('ioetWaterPeople')
+              .then(() => this.getNextCouple(channel));
+          });
+      });
   }
 
   static getRandomCouple(users, teamResult) {

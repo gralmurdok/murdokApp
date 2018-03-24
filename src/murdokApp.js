@@ -3,6 +3,7 @@ import bodyParser from 'body-parser';
 import ChannelActions from './actions/ChannelActions';
 import TokenizerService from './services/TokenizerService';
 import QueryService from './services/QueryService';
+import slackClient from './slackClient';
 
 const app = express();
 
@@ -17,8 +18,19 @@ app.post('/', (req, res) => {
   const reqProps = {
     channelId: req.body.channel_id
   }
+
+  res.send();
+
+  const dRes = slackClient.delayedResponse(req.body.response_url);
+
   return QueryService.resolveQuery(query, reqProps)
-    .then(response => res.send(response));
+    .then(response => dRes.send(response, (err, res) => {
+      if(err) {
+        return console.log(err);
+      }
+
+      return console.log(`Message sent back successfully`);
+    }));
 });
 
 app.listen(port);
