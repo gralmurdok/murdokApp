@@ -12,6 +12,12 @@ class MessageService {
     const result = formatted.join('\n')
     return this.formatMessage(result);
   }
+
+  static formatUsers(arrayMessage) {
+    const formatted = arrayMessage.map(str => `<@${str}>`);
+    const result = formatted.join('\n')
+    return this.formatMessage(result);
+  }
 }
 
 export default MessageService;

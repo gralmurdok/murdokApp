@@ -14,7 +14,10 @@ var router = express.Router();
 
 app.post('/', (req, res) => {
   const query = TokenizerService.resolveTokens(req.body.text);
-  return QueryService.resolveQuery(query)
+  const reqProps = {
+    channelId: req.body.channel_id
+  }
+  return QueryService.resolveQuery(query, reqProps)
     .then(response => res.send(response));
 });
 

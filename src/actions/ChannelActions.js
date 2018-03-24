@@ -14,7 +14,7 @@ class ChannelActions {
   }
 
   static getChannelUsers(channelId) {
-    return getChannelInfo(channelId)
+    return this.getChannelInfo(channelId)
       .then(channel => channel.members)
       .catch(console.error);
   }
