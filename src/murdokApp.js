@@ -20,6 +20,8 @@ app.post('/', (req, res) => {
     channelId: req.body.channel_id
   }
 
+  console.log(query);
+
   res.send();
 
   const dRes = slackClient.delayedResponse(req.body.response_url);

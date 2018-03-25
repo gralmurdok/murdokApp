@@ -3,7 +3,32 @@ import Database from '../database/Database';
 import moment from 'moment';
 
 class getNextWaterCouple {
+
   static resolveAction(action) {
+
+    let messageAttachment = {
+      pretext: 'Next couple selected to grab ioet\'s water are:',
+      color: '#439FE0'
+    };
+
+    switch(action.subCommand) {
+      case 'getNext':
+        return this.getNext(action.channel)
+          .then(nextCouple => {
+            messageAttachment.data = nextCouple;
+            return messageAttachment;
+          });
+      default:
+        return this.getCurrentCouple()
+          .then(currentCouple => {
+            messageAttachment.pretext = 'Current couple selected to grab ioet\'s water are:';
+            messageAttachment.data = currentCouple.couple;
+            return messageAttachment;
+          });
+    }
+  }
+
+  static getNext(channel) {
     return this.getCurrentCouple()
       .then((currentCouple = {timestamp: 0}) => {
         console.log('AAAAA => ', currentCouple);
@@ -17,7 +42,7 @@ class getNextWaterCouple {
             `cannot be changed at least in ${moment.duration(duration - diff).humanize()}`);
         }
         
-        return this.getNextCouple(action.channel);
+        return this.getNextCouple(channel);
       });
   }
 

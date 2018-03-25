@@ -17,6 +17,11 @@ class MessageService {
   }
 
   static formatWaterCoupleUsers(arrayMessage, msgProps) {
+
+    if(typeof arrayMessage === 'string') {
+      return this.formatMessage(arrayMessage);
+    }
+
     const formatted = arrayMessage.map(str => `<@${str}>`);
     const result = formatted.join('\n')
     msgProps.text = result;
