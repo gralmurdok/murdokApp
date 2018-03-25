@@ -18,16 +18,16 @@ class QueryService {
         return ChannelActions.getChannelsList()
           .then(channels => MessageService.formatChannels(channels.map(ch => ch.id)));
       case 'water':
-        return getNextWaterCouple.resolveAction({channel: reqProps.channelId, subCommand})
+        return getNextWaterCouple.resolveAction({channel: reqProps.channelId, subCommand, reqProps})
           .then(messageInfo => {
             return MessageService.formatWaterCoupleUsers(messageInfo.data, messageInfo);
           });
       default:
         return Promise.resolve(MessageService.formatMessage('', {
           pretext: 'These are the commands available for murdokApp:',
-          text: '`/murdokApp channels` => retrieve a list of all channels in slack\n' +
-            '`/murdokApp water` => gets current couple selected to grab ioet\'s water\n' +
-            '`/murdokApp water getNext` => gets next couple selected to grab ioet\'s water\n'
+          text: `\`${reqProps.slashCommand} channels\` => retrieve a list of all channels in slack\n` +
+            `\`${reqProps.slashCommand} water\` => gets current couple selected to grab ioet's water\n` +
+            `\`${reqProps.slashCommand} water getNext\` => gets next couple selected to grab ioet's water\n`
         }));
     }
   }
