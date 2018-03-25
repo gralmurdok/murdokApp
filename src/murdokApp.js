@@ -36,5 +36,9 @@ app.post('/', (req, res) => {
     }));
 });
 
+app.get('/', (req, res) => {
+  res.send('hello this is murdokApp');
+})
+
 app.listen(port);
 console.log('Murdok app bothering you on port ' + port);
