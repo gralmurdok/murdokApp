@@ -2,12 +2,12 @@
   "name": "slackbot",
   "version": "1.0.0",
   "description": "this is ioet/murdok first slackbot",
-  "main": "index.js",
+  "main": "murdokApp.js",
   "scripts": {
     "build": "rimraf dist/ && babel ./src --out-dir dist/ --copy-files",
     "start": "npm run build && node dist/murdokApp.js"
   },
-  "author": "",
+  "author": "Luis Tinitana",
   "license": "ISC",
   "dependencies": {
     "@slack/client": "^4.0.1",
