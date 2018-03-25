@@ -1,6 +1,6 @@
 import ChannelActions from '../actions/ChannelActions';
 import MessageService from './MessageService';
-import Database from '../database/database';
+import Database from '../database/Database';
 import getNextWaterCouple from '../commands/getNextWaterCouple';
 
 
