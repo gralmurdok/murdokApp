@@ -1,6 +1,5 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import ChannelActions from './actions/ChannelActions';
 import TokenizerService from './services/TokenizerService';
 import QueryService from './services/QueryService';
 import slackClient from './slackClient';
@@ -10,8 +9,7 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-var port = process.env.PORT || 8080;
-var router = express.Router();
+const port = process.env.PORT || 8080;
 
 app.post('/', (req, res) => {
 
@@ -27,12 +25,13 @@ app.post('/', (req, res) => {
   const dRes = slackClient.delayedResponse(req.body.response_url);
 
   return QueryService.resolveQuery(query, reqProps)
-    .then(response => dRes.send(response, (err, res) => {
+    .then(response => dRes.send(response, (err, response) => {
       if(err) {
         return console.log(err);
       }
 
-      return console.log(`Message sent back successfully`);
+      console.log('Message sent back successfully')
+      return response;
     }));
 });
 

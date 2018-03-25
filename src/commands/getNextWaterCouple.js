@@ -13,7 +13,7 @@ class getNextWaterCouple {
         const diff = now.diff(lastTime);
 
         if(diff < duration) {
-          return Promise.resolve(`Don't be a cheater, the chosen couple `+
+          return Promise.resolve('Don\'t be a cheater, the chosen couple '+
             `cannot be changed at least in ${moment.duration(duration - diff).humanize()}`);
         }
         

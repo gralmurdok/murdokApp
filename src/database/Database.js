@@ -20,7 +20,7 @@ class Database {
         }
   
         console.log('saved successfully');
-        return resolve({});
+        return resolve(response);
       });
     })
   }
@@ -46,7 +46,7 @@ class Database {
           return reject(err);
         }
 
-        return resolve({}); 
+        return resolve(response); 
       });
     }); 
   }

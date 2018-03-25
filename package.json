@@ -1,11 +1,15 @@
 {
   "name": "slackbot",
   "version": "1.0.0",
+  "engines": {
+    "node": ">=9.4.0"
+  },
   "description": "this is ioet/murdok first slackbot",
   "main": "murdokApp.js",
   "scripts": {
+    "eslint": "eslint src/**",
     "build": "rimraf dist/ && babel ./src --out-dir dist/ --copy-files",
-    "start": "npm run build && node dist/murdokApp.js"
+    "start": "npm run eslint && npm run build && node dist/murdokApp.js"
   },
   "author": "Luis Tinitana",
   "license": "ISC",
@@ -20,7 +24,11 @@
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
+    "babel-eslint": "^8.2.2",
     "babel-preset-es2015": "^6.24.1",
+    "eslint": "^4.19.1",
+    "eslint-plugin-babel": "^4.1.2",
+    "eslint-plugin-node": "^6.0.1",
     "nodemon": "^1.17.2"
   }
 }
