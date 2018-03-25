@@ -1,7 +1,6 @@
 class MessageService {
 
   static formatMessage(text, msgProps) {
-
     return {
       response_type: 'in_channel',
       text,

@@ -12,13 +12,17 @@ MongoClient.connect(config.databaseUrl, (err, client) => {
 
 class Database {
   static saveToCollection(collection, data) {
-    return database.collection(collection).save(data, (err, response) => {
-      if(err) {
-        return console.log(err);
-      }
-
-      console.log('saved successfully');
-    });
+    return new Promise((resolve, reject) => {
+      return database.collection(collection).save(data, (err, response) => {
+        if(err) {
+          console.log(err);
+          return reject(err);
+        }
+  
+        console.log('saved successfully');
+        return resolve({});
+      });
+    })
   }
   
   static getFromCollection(collection, data) {

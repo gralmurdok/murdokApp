@@ -19,7 +19,13 @@ class QueryService {
         }
 
         return getNextWaterCouple.resolveAction({channel: reqProps.channelId})
-          .then(waterCouple => MessageService.formatWaterCoupleUsers(waterCouple, messageProps));
+          .then(waterCouple => {
+            if(typeof waterCouple === 'string') {
+              return waterCouple;
+            }
+
+            return MessageService.formatWaterCoupleUsers(waterCouple, messageProps);
+          });
     }
   }
 }

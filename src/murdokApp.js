@@ -14,6 +14,9 @@ var port = 8080;
 var router = express.Router();
 
 app.post('/', (req, res) => {
+
+  console.log('BODY => ', req.body);
+
   const query = TokenizerService.resolveTokens(req.body.text);
   const reqProps = {
     channelId: req.body.channel_id
