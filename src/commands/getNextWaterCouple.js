@@ -83,7 +83,8 @@ class getNextWaterCouple {
   static getCurrentCouple() {
     return Database.getFromCollection('ioetWaterPeople')
       .then(chosenOnes => {
-        return chosenOnes.sort((a, b) => b-a)[0];
+        return chosenOnes.sort((a, b) => b-a)[0] || 
+          {couple: 'There is no a couple selected yet, pls run `/murdokApp water getNext`'};
       });
   }
 }
