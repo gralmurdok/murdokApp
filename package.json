@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "rimraf dist/ && babel ./src --out-dir dist/ --copy-files",
-    "run": "npm run build && node dist/murdokApp.js"
+    "start": "npm run build && node dist/murdokApp.js"
   },
   "author": "",
   "license": "ISC",
