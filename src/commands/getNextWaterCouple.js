@@ -13,36 +13,36 @@ class getNextWaterCouple {
 
     switch(action.subCommand) {
       case 'getNext':
-        return this.getNext(action.channel)
+        return this.getNext(action)
           .then(nextCouple => {
             messageAttachment.data = nextCouple;
             return messageAttachment;
           });
       default:
-        return this.getCurrentCouple()
+        return this.getLastCreationCouple(action)
           .then(currentCouple => {
             messageAttachment.pretext = 'Current couple selected to grab ioet\'s water are:';
-            messageAttachment.data = currentCouple.couple;
+            messageAttachment.data = currentCouple;
             return messageAttachment;
           });
     }
   }
 
-  static getNext(channel) {
-    return this.getCurrentCouple()
-      .then((currentCouple = {timestamp: 0}) => {
-        console.log('AAAAA => ', currentCouple);
-        const duration = moment.duration(1, 'day').valueOf();
-        const lastTime = moment(currentCouple.timestamp);
+  static getNext(action) {
+    return this.getLastCreationTime()
+      .then((timestamp = 0) => {
+        console.log('AAAAA => ', timestamp);
+        const duration = moment.duration(1, 'hour').valueOf();
+        const lastTime = moment(timestamp);
         const now = moment();
         const diff = now.diff(lastTime);
 
         if(diff < duration) {
-          return Promise.resolve('Don\'t be a cheater, the chosen couple '+
+          return Promise.resolve(`<@${action.reqProps.userId}> don't be a cheater, the chosen couple `+
             `cannot be changed at least in ${moment.duration(duration - diff).humanize()}`);
         }
         
-        return this.getNextCouple(channel);
+        return this.getNextCouple(action.channel);
       });
   }
 
@@ -80,12 +80,22 @@ class getNextWaterCouple {
     }
   }
 
-  static getCurrentCouple() {
+  static getLastCreationEntry() {
     return Database.getFromCollection('ioetWaterPeople')
       .then(chosenOnes => {
-        return chosenOnes.sort((a, b) => b-a)[0] || 
-          {couple: 'There is no a couple selected yet, pls run `/murdokApp water getNext`'};
+        return chosenOnes.sort((a, b) => b-a)[0] || {};
       });
+  }
+
+  static getLastCreationCouple(action) {
+    return this.getLastCreationEntry()
+      .then(result => result.couple || 
+        `There is no a couple selected yet, pls run \`${action.reqProps.slashCommand} water getNext\``);
+  }
+
+  static getLastCreationTime() {
+    return this.getLastCreationEntry()
+      .then(result => result.timestamp || 0);
   }
 }
 

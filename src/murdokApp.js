@@ -17,7 +17,9 @@ app.post('/', (req, res) => {
 
   const query = TokenizerService.resolveTokens(req.body.text);
   const reqProps = {
-    channelId: req.body.channel_id
+    channelId: req.body.channel_id,
+    userId: req.body.user_id,
+    slashCommand: req.body.command
   }
 
   console.log(query);
