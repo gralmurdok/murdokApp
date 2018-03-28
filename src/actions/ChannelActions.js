@@ -13,9 +13,20 @@ class ChannelActions {
       .then(res => res.channel);
   }
 
+  static getGroupInfo(channel) {
+    return slackClient.web.groups.info({channel})
+      .then(res => res.group);
+  }
+
   static getChannelUsers(channelId) {
-    return this.getChannelInfo(channelId)
+    return ChannelActions.getChannelInfo(channelId)
       .then(channel => channel.members)
+      .catch(console.error);
+  }
+
+  static getGroupUsers(channelId) {
+    return ChannelActions.getGroupInfo(channelId)
+      .then(group => group.members)
       .catch(console.error);
   }
 }

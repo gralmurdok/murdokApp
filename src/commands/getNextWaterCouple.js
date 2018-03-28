@@ -29,7 +29,7 @@ class getNextWaterCouple {
   }
 
   static getNext(action) {
-    return this.getLastCreationTime()
+    return this.getLastCreationTime(action)
       .then((timestamp = 0) => {
         console.log('AAAAA => ', timestamp);
         const duration = moment.duration(1, 'hour').valueOf();
@@ -42,14 +42,17 @@ class getNextWaterCouple {
             `cannot be changed at least in ${moment.duration(duration - diff).humanize()}`);
         }
         
-        return this.getNextCouple(action.channel);
+        return this.getNextCouple(action.channel, action.reqProps.channelName);
       });
   }
 
-  static getNextCouple(channel) {
-    return ChannelActions.getChannelUsers(channel)
+  static getNextCouple(channel, channelName) {
+
+    const getUsers = channelName === 'privategroup' ? ChannelActions.getGroupUsers : ChannelActions.getChannelUsers;
+
+    return getUsers(channel)
       .then(users => {
-        return Database.getFromCollection('ioetWaterPeople')
+        return Database.getFromCollection(`ioetWaterPeople_${channel}`)
           .then((chosenOnes = []) => {
             console.log('choosen => ', chosenOnes);
             const couples = chosenOnes.map(item => item.couple);
@@ -59,11 +62,12 @@ class getNextWaterCouple {
             const newCouple = this.getRandomCouple(validUsers).filter(x => !!x); 
 
             if(newCouple.length) {
-              return Database.saveToCollection('ioetWaterPeople', {couple: newCouple, timestamp: moment().valueOf()})
+              return Database.saveToCollection(`ioetWaterPeople_${channel}`,
+                {couple: newCouple, timestamp: moment().valueOf()})
                 .then(() => newCouple);
             }
 
-            return Database.dumpCollection('ioetWaterPeople')
+            return Database.dumpCollection(`ioetWaterPeople_${channel}`)
               .then(() => this.getNextCouple(channel));
           });
       });
@@ -80,21 +84,21 @@ class getNextWaterCouple {
     }
   }
 
-  static getLastCreationEntry() {
-    return Database.getFromCollection('ioetWaterPeople')
+  static getLastCreationEntry(channel) {
+    return Database.getFromCollection(`ioetWaterPeople_${channel}`)
       .then(chosenOnes => {
         return chosenOnes.sort((a, b) => b-a)[0] || {};
       });
   }
 
   static getLastCreationCouple(action) {
-    return this.getLastCreationEntry()
+    return this.getLastCreationEntry(action.channel)
       .then(result => result.couple || 
         `There is no a couple selected yet, pls run \`${action.reqProps.slashCommand} water getNext\``);
   }
 
-  static getLastCreationTime() {
-    return this.getLastCreationEntry()
+  static getLastCreationTime(action) {
+    return this.getLastCreationEntry(action.channel)
       .then(result => result.timestamp || 0);
   }
 }
