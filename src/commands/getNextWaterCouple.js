@@ -42,12 +42,15 @@ class getNextWaterCouple {
             `cannot be changed at least in ${moment.duration(duration - diff).humanize()}`);
         }
         
-        return this.getNextCouple(action.channel);
+        return this.getNextCouple(action.channel, action.reqProps.channelName);
       });
   }
 
-  static getNextCouple(channel) {
-    return ChannelActions.getChannelUsers(channel)
+  static getNextCouple(channel, channelName) {
+
+    const getUsers = channelName === 'privategroup' ? ChannelActions.getGroupUsers : ChannelActions.getChannelUsers;
+
+    return getUsers(channel)
       .then(users => {
         return Database.getFromCollection(`ioetWaterPeople_${channel}`)
           .then((chosenOnes = []) => {
