@@ -41,7 +41,7 @@ class getNextWaterCouple {
           return Promise.resolve(`<@${action.reqProps.userId}> don't be a cheater, the chosen couple `+
             `cannot be changed at least in ${moment.duration(duration - diff).humanize()}`);
         }
-        
+
         return this.getNextCouple(action.channel, action.reqProps.channelName);
       });
   }
@@ -54,12 +54,13 @@ class getNextWaterCouple {
       .then(users => {
         return Database.getFromCollection(`ioetWaterPeople_${channel}`)
           .then((chosenOnes = []) => {
+            console.log('users => ', users);
             console.log('choosen => ', chosenOnes);
             const couples = chosenOnes.map(item => item.couple);
             const existingIds = couples.reduce((a, b) => a.concat(b), []);
             console.log('existingIds => ', existingIds);
             const validUsers = users.filter(usr => existingIds.indexOf(usr) === -1);
-            const newCouple = this.getRandomCouple(validUsers).filter(x => !!x); 
+            const newCouple = this.getRandomCouple(validUsers).filter(x => !!x);
 
             if(newCouple.length) {
               return Database.saveToCollection(`ioetWaterPeople_${channel}`,
@@ -87,13 +88,13 @@ class getNextWaterCouple {
   static getLastCreationEntry(channel) {
     return Database.getFromCollection(`ioetWaterPeople_${channel}`)
       .then(chosenOnes => {
-        return chosenOnes.sort((a, b) => b-a)[0] || {};
+        return chosenOnes.sort((a, b) => b.timestamp - a.timestamp)[0] || {};
       });
   }
 
   static getLastCreationCouple(action) {
     return this.getLastCreationEntry(action.channel)
-      .then(result => result.couple || 
+      .then(result => result.couple ||
         `There is no a couple selected yet, pls run \`${action.reqProps.slashCommand} water getNext\``);
   }
 
