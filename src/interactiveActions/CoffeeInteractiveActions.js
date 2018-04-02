@@ -46,7 +46,7 @@ class CoffeeInteractiveActions {
   }
 
   static readyForCoffee(usersThatWantCoffee, channelId, replacement) {
-    return Database.getFromCollection(`ioetCoffeeLovers_${channelId}`)
+    return Database.getFromCollection(`coffeeLovers_${channelId}`)
       .then(users => {
         const userIds = users.map(user => user.userId);
         const validUsers = usersThatWantCoffee.filter(usr => userIds.indexOf(usr) === -1);
@@ -54,7 +54,7 @@ class CoffeeInteractiveActions {
         const selected = validUsers[selectedPos];
 
         if(selected) {
-          return Database.saveToCollection(`ioetCoffeeLovers_${channelId}`,
+          return Database.saveToCollection(`coffeeLovers_${channelId}`,
             {userId: selected, timestamp: moment().valueOf()})
             .then(() => {
               if(replacement.attachments[0].actions) {
@@ -66,7 +66,7 @@ class CoffeeInteractiveActions {
             });
         }
 
-        return Database.dumpCollection(`ioetCoffeeLovers_${channelId}`)
+        return Database.dumpCollection(`coffeeLovers_${channelId}`)
           .then(() => this.readyForCoffee(usersThatWantCoffee, channelId, replacement));
       });
   }
