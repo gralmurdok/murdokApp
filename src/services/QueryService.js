@@ -14,6 +14,33 @@ class QueryService {
     }
 
     switch(mainCommand || command) {
+      case 'welcome':
+        return Promise.resolve(MessageService.formatMessage('', {
+          pretext: 'What do you want?',
+          'callback_id': 'coffee_button',
+          actions: [
+            {
+              name: 'coffee',
+              text: 'I want coffee',
+              type: 'button',
+              value: 'i_want_coffee'
+            },
+            {
+              name: 'not_coffee',
+              text: 'I don\'t want coffee',
+              style: 'danger',
+              type: 'button',
+              value: 'i_dont_want_coffee'
+            },
+            {
+              name: 'ready',
+              text: 'Ready for coffee',
+              style: 'primary',
+              type: 'button',
+              value: 'ready_for_coffee'
+            }
+          ]
+        }));
       case 'channels':
         return ChannelActions.getChannelsList()
           .then(channels => MessageService.formatChannels(channels.map(ch => ch.id)));

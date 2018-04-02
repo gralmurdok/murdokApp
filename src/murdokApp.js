@@ -3,6 +3,9 @@ import bodyParser from 'body-parser';
 import TokenizerService from './services/TokenizerService';
 import QueryService from './services/QueryService';
 import slackClient from './slackClient';
+import LanguageActions from './actions/LanguageActions';
+import Database from './database/Database';
+import CoffeeInteractiveActions from './interactiveActions/CoffeeInteractiveActions';
 
 const app = express();
 
@@ -43,6 +46,35 @@ app.post('/', (req, res) => {
 app.get('/', (req, res) => {
   res.send('hello this is murdokApp');
 })
+
+//Events API
+
+app.use('/slack/events', slackClient.slackEvents.expressMiddleware());
+
+slackClient.slackEvents.on('message', event => {
+
+  console.log(event);
+  console.log(`Received a message event: user ${event.user} in channel ${event.channel} says ${event.text}`);
+
+  return LanguageActions.detectLanguageInput(event.text)
+    .then(language => {
+      const isEnglish = language === 'en';
+      const {user, channel, text} = event;
+
+      if(isEnglish) {
+        Database.saveToCollection(`englishSentences_${channel}`, {user, text});
+      }
+    });
+});
+
+// Interactive messages API
+
+app.use('/slack/actions', slackClient.interactiveMessages.expressMiddleware());
+
+slackClient.interactiveMessages.action('coffee_button', payload => {
+  return CoffeeInteractiveActions.executeAction(payload)
+    .then(replacement => replacement);
+});
 
 app.listen(port);
 console.log('Murdok app bothering you on port ' + port);
