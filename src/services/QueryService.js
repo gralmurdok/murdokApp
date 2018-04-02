@@ -26,6 +26,13 @@ class QueryService {
               value: 'i_want_coffee'
             },
             {
+              name: 'not_coffee',
+              text: 'I don\'t want coffee',
+              style: 'danger',
+              type: 'button',
+              value: 'i_dont_want_coffee'
+            },
+            {
               name: 'ready',
               text: 'Ready for coffee',
               style: 'primary',

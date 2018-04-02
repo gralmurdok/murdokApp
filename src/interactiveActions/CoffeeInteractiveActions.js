@@ -1,5 +1,6 @@
 import Database from '../database/Database';
 import moment from 'moment';
+import Store from '../store/Store';
 
 class CoffeeInteractiveActions {
 
@@ -8,19 +9,27 @@ class CoffeeInteractiveActions {
     const {user, channel} = payload;
     const action = payload.actions[0];
     let replacement = payload.original_message;
-    let usersThatWantCoffee = (replacement.attachments[0].text || '')
-      .match(/\w+/g) || [];
+    let usersThatWantCoffee = Store.coffeeUsers;
     let pretext = 'Current users that want coffee are:';
     let actionToResolve;
 
     if(action.value === 'i_want_coffee' && (usersThatWantCoffee.indexOf(user.id) === -1)) {
-      usersThatWantCoffee.push(user.id);
+      Store.addUser(user.id);
+      actionToResolve = Promise.resolve(usersThatWantCoffee);
+    }
+
+    if(action.value === 'i_dont_want_coffee') {
+      Store.removeUser(user.id);
+      if(!usersThatWantCoffee.length) {
+        pretext = 'What do you want?';
+      }
       actionToResolve = Promise.resolve(usersThatWantCoffee);
     }
 
     if(action.value === 'ready_for_coffee') {
       actionToResolve = this.readyForCoffee(usersThatWantCoffee, channel.id, replacement)
         .then(newPretext => {
+          Store.setUsers([]);
           pretext = newPretext;
           return Promise.resolve();
         });
