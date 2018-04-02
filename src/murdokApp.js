@@ -5,6 +5,7 @@ import QueryService from './services/QueryService';
 import slackClient from './slackClient';
 import LanguageActions from './actions/LanguageActions';
 import Database from './database/Database';
+import CoffeeInteractiveActions from './interactiveActions/CoffeeInteractiveActions';
 
 const app = express();
 
@@ -46,9 +47,6 @@ app.get('/', (req, res) => {
   res.send('hello this is murdokApp');
 })
 
-app.listen(port);
-console.log('Murdok app bothering you on port ' + port);
-
 //Events API
 
 app.use('/slack/events', slackClient.slackEvents.expressMiddleware());
@@ -69,6 +67,13 @@ slackClient.slackEvents.on('message', event => {
     });
 });
 
-slackClient.slackEvents.start(3000).then(() => {
-  console.log(`server listening on port ${port}`);
+// Interactive messages API
+
+app.use('/slack/actions', slackClient.interactiveMessages.expressMiddleware());
+
+slackClient.interactiveMessages.action('coffee_button', payload => {
+  return CoffeeInteractiveActions.executeAction(payload);
 });
+
+app.listen(port);
+console.log('Murdok app bothering you on port ' + port);
