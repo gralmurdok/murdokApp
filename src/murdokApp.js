@@ -72,7 +72,8 @@ slackClient.slackEvents.on('message', event => {
 app.use('/slack/actions', slackClient.interactiveMessages.expressMiddleware());
 
 slackClient.interactiveMessages.action('coffee_button', payload => {
-  return CoffeeInteractiveActions.executeAction(payload);
+  return CoffeeInteractiveActions.executeAction(payload)
+    .then(replacement => replacement);
 });
 
 app.listen(port);
