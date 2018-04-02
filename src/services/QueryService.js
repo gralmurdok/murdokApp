@@ -14,7 +14,7 @@ class QueryService {
     }
 
     switch(mainCommand || command) {
-      case 'welcome':
+      case 'coffee':
         return Promise.resolve(MessageService.formatMessage('', {
           pretext: 'What do you want?',
           'callback_id': 'coffee_button',
@@ -28,7 +28,6 @@ class QueryService {
             {
               name: 'not_coffee',
               text: 'I don\'t want coffee',
-              style: 'danger',
               type: 'button',
               value: 'i_dont_want_coffee'
             },
@@ -52,7 +51,7 @@ class QueryService {
       default:
         return Promise.resolve(MessageService.formatMessage('', {
           pretext: 'These are the commands available for murdokApp:',
-          text: `\`${reqProps.slashCommand} channels\` => retrieve a list of all channels in slack\n` +
+          text: `\`${reqProps.slashCommand} coffee\` => use it instead of using \`@channel coffee?\`\n` +
             `\`${reqProps.slashCommand} water\` => gets current couple selected to grab ioet's water\n` +
             `\`${reqProps.slashCommand} water getNext\` => gets next couple selected to grab ioet's water\n`
         }));
