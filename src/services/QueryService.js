@@ -52,8 +52,8 @@ class QueryService {
         return Promise.resolve(MessageService.formatMessage('', {
           pretext: 'These are the commands available for murdokApp:',
           text: `\`${reqProps.slashCommand} coffee\` => use it instead of using \`@channel coffee?\`\n` +
-            `\`${reqProps.slashCommand} water\` => gets current couple selected to grab ioet's water\n` +
-            `\`${reqProps.slashCommand} water getNext\` => gets next couple selected to grab ioet's water\n`
+            `\`${reqProps.slashCommand} water\` => gets current couple selected to grab water\n` +
+            `\`${reqProps.slashCommand} water getNext\` => gets next couple selected to grab water\n`
         }));
     }
   }

@@ -7,7 +7,7 @@ class getNextWaterCouple {
   static resolveAction(action) {
 
     let messageAttachment = {
-      pretext: 'Next couple selected to grab ioet\'s water are:',
+      pretext: 'Next couple selected to grab water are:',
       color: '#439FE0'
     };
 
@@ -21,7 +21,7 @@ class getNextWaterCouple {
       default:
         return this.getLastCreationCouple(action)
           .then(currentCouple => {
-            messageAttachment.pretext = 'Current couple selected to grab ioet\'s water are:';
+            messageAttachment.pretext = 'Current couple selected to grab water are:';
             messageAttachment.data = currentCouple;
             return messageAttachment;
           });
@@ -52,7 +52,7 @@ class getNextWaterCouple {
 
     return getUsers(channel)
       .then(users => {
-        return Database.getFromCollection(`ioetWaterPeople_${channel}`)
+        return Database.getFromCollection(`waterPeople_${channel}`)
           .then((chosenOnes = []) => {
             console.log('users => ', users);
             console.log('choosen => ', chosenOnes);
@@ -63,12 +63,12 @@ class getNextWaterCouple {
             const newCouple = this.getRandomCouple(validUsers).filter(x => !!x);
 
             if(newCouple.length) {
-              return Database.saveToCollection(`ioetWaterPeople_${channel}`,
+              return Database.saveToCollection(`waterPeople_${channel}`,
                 {couple: newCouple, timestamp: moment().valueOf()})
                 .then(() => newCouple);
             }
 
-            return Database.dumpCollection(`ioetWaterPeople_${channel}`)
+            return Database.dumpCollection(`waterPeople_${channel}`)
               .then(() => this.getNextCouple(channel));
           });
       });
@@ -86,7 +86,7 @@ class getNextWaterCouple {
   }
 
   static getLastCreationEntry(channel) {
-    return Database.getFromCollection(`ioetWaterPeople_${channel}`)
+    return Database.getFromCollection(`waterPeople_${channel}`)
       .then(chosenOnes => {
         return chosenOnes.sort((a, b) => b.timestamp - a.timestamp)[0] || {};
       });
