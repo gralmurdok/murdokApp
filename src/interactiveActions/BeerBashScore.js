@@ -10,7 +10,7 @@ class BeerBashScore {
     let beerBashRates = Store[`beerBashRates_${timestamp}`] || (Store[`beerBashRates_${timestamp}`] = [])
     let pretext = 'Current users that submitted their votes were:'
     let actionToResolve
-    const minVotes = 5
+    const minVotes = 10
 
     console.log(payload)
 
