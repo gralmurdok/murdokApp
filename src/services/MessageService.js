@@ -1,12 +1,13 @@
 class MessageService {
 
-  static formatMessage(text, msgProps) {
+  static formatMessage(text, msgProps, msgProps2) {
     return {
       'response_type': 'in_channel',
       text,
       attachments: [
-        msgProps
-      ]
+        msgProps,
+        msgProps2
+      ].filter(x => !!x)
     };
   }
 

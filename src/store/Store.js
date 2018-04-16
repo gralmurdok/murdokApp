@@ -2,6 +2,7 @@ class Store {
 
   constructor() {
     this.coffeeUsers = [];
+    this.beerBashRates = [];
   }
 
   addUser(userId) {
