@@ -8,7 +8,7 @@ class BeerBashScore {
     const action = payload.actions[0]
     let replacement = payload.original_message
     let beerBashRates = Store[`beerBashRates_${timestamp}`] || (Store[`beerBashRates_${timestamp}`] = [])
-    let pretext = 'Current users that submitted their votes are:'
+    let pretext = 'Current users that submitted their votes were:'
     let actionToResolve
     const minVotes = 5
 
