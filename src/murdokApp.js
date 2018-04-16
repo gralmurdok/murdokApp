@@ -22,7 +22,7 @@ app.get('/auth', (req, res) => {
 
   const {query} = req;
   const {code} = query || {};
-  const redirectUri = 'http://6de97cb5.ngrok.io/auth';
+  const redirectUri = 'http://murdokapp.herokuapp.com/auth';
   const url = `https://slack.com/api/oauth.access/?client_id=${config.clientId}`+
     `&client_secret=${config.clientSecret}&code=${code}&redirect_uri=${redirectUri}`;
 
