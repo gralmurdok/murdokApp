@@ -10,6 +10,7 @@ import config from './config';
 import fetch from 'node-fetch';
 import {WebClient} from '@slack/client';
 import Store from './store/Store';
+import BeerBashScore from './interactiveActions/BeerBashScore';
 
 const app = express();
 
@@ -123,6 +124,11 @@ app.use('/slack/actions', slackClient.interactiveMessages.expressMiddleware());
 
 slackClient.interactiveMessages.action('coffee_button', payload => {
   return CoffeeInteractiveActions.executeAction(payload)
+    .then(replacement => replacement);
+});
+
+slackClient.interactiveMessages.action('beerbashScore_button', payload => {
+  return BeerBashScore.executeAction(payload)
     .then(replacement => replacement);
 });
 

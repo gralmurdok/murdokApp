@@ -14,6 +14,20 @@ class QueryService {
     }
 
     switch(mainCommand || command) {
+      case 'beerBashScore':
+        return Promise.resolve(MessageService.formatMessage('', {
+          pretext: 'Please rate last beerBash, It will help us to improve future beerbash schedules.',
+          'callback_id': 'beerbashScore_button',
+          actions: [1,2,3,4,5]
+            .map(num => {
+              return {
+                name: 'rate_value',
+                text: `${num}`,
+                type: 'button',
+                value: `${num}`
+              }
+            })
+        }));
       case 'coffee':
         return Promise.resolve(MessageService.formatMessage('', {
           pretext: 'What do you want?',
@@ -53,7 +67,8 @@ class QueryService {
           pretext: 'These are the commands available for murdokApp:',
           text: `\`${reqProps.slashCommand} coffee\` => use it instead of using \`@channel coffee?\`\n` +
             `\`${reqProps.slashCommand} water\` => gets current couple selected to grab water\n` +
-            `\`${reqProps.slashCommand} water getNext\` => gets next couple selected to grab water\n`
+            `\`${reqProps.slashCommand} water getNext\` => gets next couple selected to grab water\n` +
+            `\`${reqProps.slashCommand} beerBashScore\` => call vote to rate last beerbash\n`
         }));
     }
   }
