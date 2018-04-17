@@ -31,7 +31,9 @@ class ThreeInLine {
     }
 
     if(action.name === 'set_value') {
-      if(game.filter(x => !!x).length === 9) {
+      if(game.filter(x => !!x).length === 9
+        || this.evaluateGame(game, 'x')
+        || this.evaluateGame(game, 'o')) {
         return Promise.resolve(replacement)
       }
 
