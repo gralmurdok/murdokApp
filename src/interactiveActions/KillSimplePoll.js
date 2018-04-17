@@ -33,6 +33,11 @@ class KillSimplePoll {
       actionToResolve = Promise.resolve(replacement)
     }
 
+    if(action.name === 'finish') {
+      this.finish(replacement)
+      actionToResolve = Promise.resolve(replacement)
+    }
+
     return actionToResolve
       .then(() => {
         return replacement
@@ -71,6 +76,18 @@ class KillSimplePoll {
               value: 'refresh'
             }
           ]
+        },
+        {
+          text: '',
+          'callback_id': 'channel_wants_this',
+          actions: [
+            {
+              name: 'finish',
+              text: 'Finish',
+              type: 'button',
+              value: 'finish'
+            }
+          ]
         }
       ])
   }
@@ -84,6 +101,14 @@ class KillSimplePoll {
           .map(id => ({id, choice: att.actions[0].value}))
       })
       .reduce((a,b) => a.concat(b), [])
+  }
+
+  static finish(replacement) {
+    delete Store[`channelChoices_${channel.id}`]
+    delete Store[`options${channel.id}`]
+
+    return (replacement.attachments || [])
+      .foreach(att => delete att.actions)
   }
 }
 
