@@ -20,6 +20,7 @@ class KillSimplePoll {
       }
 
       this.refresh(replacement, channel)
+      actionToResolve = Promise.resolve(replacement)
     }
 
     if(action.name === 'refresh') {
