@@ -31,6 +31,10 @@ class ThreeInLine {
     }
 
     if(action.name === 'set_value') {
+      if(game.filter(x => !!x).length === 9) {
+        return Promise.resolve(replacement)
+      }
+
       let token
 
       if(currentPlayer === player1) {
@@ -93,12 +97,12 @@ class ThreeInLine {
 
     let gameState = '';
 
-    if(solutions.some(sol => gameSet.includes(sol))) {
-      gameState = 'winner'
-    }
-
     if(game.filter(x => !!x).length === 9) {
       gameState = 'draw'
+    }
+
+    if(solutions.some(sol => gameSet.includes(sol))) {
+      gameState = 'winner'
     }
 
     return gameState
