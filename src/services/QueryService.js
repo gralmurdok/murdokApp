@@ -18,11 +18,14 @@ class QueryService {
 
     switch(mainCommand || command) {
       case 'addOption':
-        let options = Store[`options_${reqProps.channelId}`] || (Store[`options_${reqProps.channelId}`] = [])
-        options.push(subCommand);
-        return Promise.resolve({
-          text: `you just added \`${subCommand}\` press \`Refresh Options\` to your changes to take effect`
-        });
+        let options = Store[`options_${reqProps.channelId}`];
+        if(options) {
+          options.push(subCommand);
+          return Promise.resolve({
+            text: `you just added \`${subCommand}\` press \`Refresh Options\` to your changes to take effect`
+          });
+        }
+        return Promise.resolve({text: 'there is no an active poll running'});
       case 'killSimplePoll':
         return Promise.resolve(MessageService.formatMessage('', {
           pretext: 'What do our team wants?',

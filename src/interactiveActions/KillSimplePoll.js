@@ -6,7 +6,12 @@ class KillSimplePoll {
     const {user, channel} = payload
     const action = payload.actions[0]
     let replacement = payload.original_message
-    let channelChoices = Store[`channelChoices_${channel.id}`] || (Store[`channelChoices_${channel.id}`] = [])
+    let channelChoices = Store[`channelChoices_${channel.id}`] ||
+      (Store[`channelChoices_${channel.id}`] = this.getPreviousData(replacement))
+    Store[`options_${channel.id}`] = Store[`options_${channel.id}`] ||
+      (Store[`options_${channel.id}`] = this.getPreviousData(replacement)
+        .map(data => data.choice))
+
     let actionToResolve
 
     console.log(payload)
@@ -35,13 +40,13 @@ class KillSimplePoll {
   }
 
   static refresh(replacement, channel) {
-    let options = Store[`options_${channel.id}`] || (Store[`options_${channel.id}`] = [])
-    let channelChoices = Store[`channelChoices_${channel.id}`] || (Store[`channelChoices_${channel.id}`] = [])
+    let options = Store[`options_${channel.id}`]
+    let channelChoices = Store[`channelChoices_${channel.id}`]
 
     replacement.attachments = options.map(opt => ({
       text: channelChoices
         .filter(ch => ch.choice === opt)
-        .map(ch => `:white_check_mark: <@${ch.id}>`)
+        .map(ch => `<@${ch.id}>`)
         .join('\n'),
       pretext: `People that wants *${opt}*:`,
       'callback_id': 'channel_wants_this',
@@ -68,6 +73,17 @@ class KillSimplePoll {
           ]
         }
       ])
+  }
+
+  static getPreviousData(replacement) {
+    return (replacement.attachments || [])
+      .filter(att => !!att.text)
+      .map(att => {
+        return att.text
+          .match(/\w+/g)
+          .map(id => ({id, choice: att.actions[0].value}))
+      })
+      .reduce((a,b) => a.concat(b), [])
   }
 }
 
