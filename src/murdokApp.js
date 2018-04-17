@@ -11,6 +11,7 @@ import fetch from 'node-fetch';
 import {WebClient} from '@slack/client';
 import Store from './store/Store';
 import BeerBashScore from './interactiveActions/BeerBashScore';
+import KillSimplePoll from './interactiveActions/KillSimplePoll';
 
 const app = express();
 
@@ -129,6 +130,11 @@ slackClient.interactiveMessages.action('coffee_button', payload => {
 
 slackClient.interactiveMessages.action('beerbashScore_button', payload => {
   return BeerBashScore.executeAction(payload)
+    .then(replacement => replacement);
+});
+
+slackClient.interactiveMessages.action('channel_wants_this', payload => {
+  return KillSimplePoll.executeAction(payload)
     .then(replacement => replacement);
 });
 

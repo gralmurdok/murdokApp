@@ -11,6 +11,21 @@ MongoClient.connect(config.databaseUrl, (err, client) => {
 });
 
 class Database {
+
+  static updateInCollection(collection, query, data) {
+    return new Promise((resolve, reject) => {
+      return database.collection(collection).update(query, data, (err, response) => {
+        if(err) {
+          console.log(err);
+          return reject(err);
+        }
+
+        console.log('updated successfully');
+        return resolve(response);
+      });
+    })
+  }
+
   static saveToCollection(collection, data) {
     return new Promise((resolve, reject) => {
       return database.collection(collection).save(data, (err, response) => {
@@ -18,13 +33,13 @@ class Database {
           console.log(err);
           return reject(err);
         }
-  
+
         console.log('saved successfully');
         return resolve(response);
       });
     })
   }
-  
+
   static getFromCollection(collection, data) {
     return new Promise((resolve, reject) => {
       database.collection(collection).find(data).toArray((err, response) => {
@@ -33,7 +48,7 @@ class Database {
           return reject(err);
         }
 
-        return resolve(response); 
+        return resolve(response);
       });
     });
   }
@@ -46,9 +61,9 @@ class Database {
           return reject(err);
         }
 
-        return resolve(response); 
+        return resolve(response);
       });
-    }); 
+    });
   }
 }
 

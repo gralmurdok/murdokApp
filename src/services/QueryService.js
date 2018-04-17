@@ -1,6 +1,7 @@
 import ChannelActions from '../actions/ChannelActions';
 import MessageService from './MessageService';
 import getNextWaterCouple from '../commands/getNextWaterCouple';
+import Store from '../store/Store';
 
 
 class QueryService {
@@ -10,10 +11,31 @@ class QueryService {
 
     if(typeof command !== 'string') {
       mainCommand = command[0];
-      subCommand = command[1];
+      subCommand = command
+        .slice(1, command.length)
+        .join(' ');
     }
 
     switch(mainCommand || command) {
+      case 'addOption':
+        let options = Store[`options_${reqProps.channelId}`] || (Store[`options_${reqProps.channelId}`] = [])
+        options.push(subCommand);
+        return Promise.resolve({
+          text: `you just added \`${subCommand}\` press \`Refresh Options\` to your changes to take effect`
+        });
+      case 'killSimplePoll':
+        return Promise.resolve(MessageService.formatMessage('', {
+          pretext: 'What do our team wants?',
+          'callback_id': 'channel_wants_this',
+          actions: [
+            {
+              name: 'refresh',
+              text: 'Refresh Options',
+              type: 'button',
+              value: 'refresh'
+            }
+          ]
+        }));
       case 'beerBashScore':
         return Promise.resolve(MessageService.formatMessage('', {
           pretext: 'Please rate last beerBash, It will help us to improve future beerbash schedules.',
