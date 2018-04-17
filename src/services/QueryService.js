@@ -17,6 +17,20 @@ class QueryService {
     }
 
     switch(mainCommand || command) {
+      case 'threeInLine':
+        Store['threeInLinePlayer'] = reqProps.userId
+        return Promise.resolve(MessageService.formatMessage('', {
+          pretext: `<@${reqProps.userId}> wants someone to challenge him`,
+          'callback_id': 'three_in_line_game',
+          actions: [
+            {
+              name: 'challenge_accepted',
+              text: 'I want to challenge you',
+              type: 'button',
+              value: '0'
+            }
+          ]
+        }));
       case 'addOption':
         let options = Store[`options_${reqProps.channelId}`];
         if(options) {
@@ -99,7 +113,9 @@ class QueryService {
             `\`${reqProps.slashCommand} water getNext\` => gets next couple selected to grab water\n` +
             `\`${reqProps.slashCommand} beerBashScore\` => call vote to rate last beerbash\n` +
             `\`${reqProps.slashCommand} killSimplePoll\` => call a dynamic poll\n` +
-            `\`${reqProps.slashCommand} addOption text\` => add an option to vote\n`
+            `\`${reqProps.slashCommand} addOption text\` => add an option to vote\n` +
+            `\`${reqProps.slashCommand} threeInLine\` => play three-in-line against ` +
+              'another member of technical staff\n'
         }));
     }
   }
