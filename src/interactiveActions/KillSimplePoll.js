@@ -34,7 +34,7 @@ class KillSimplePoll {
     }
 
     if(action.name === 'finish') {
-      this.finish(replacement)
+      this.finish(replacement, channel)
       actionToResolve = Promise.resolve(replacement)
     }
 
@@ -103,7 +103,7 @@ class KillSimplePoll {
       .reduce((a,b) => a.concat(b), [])
   }
 
-  static finish(replacement) {
+  static finish(replacement, channel) {
     delete Store[`channelChoices_${channel.id}`]
     delete Store[`options${channel.id}`]
 
