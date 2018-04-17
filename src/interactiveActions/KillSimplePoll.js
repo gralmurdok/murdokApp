@@ -6,10 +6,15 @@ class KillSimplePoll {
     const {user, channel} = payload
     const action = payload.actions[0]
     let replacement = payload.original_message
-    let channelChoices = Store[`channelChoices_${channel.id}`] || (Store[`channelChoices_${channel.id}`] = [])
+    let channelChoices = Store[`channelChoices_${channel.id}`] ||
+      (Store[`channelChoices_${channel.id}`] = this.getPreviousData(replacement))
+    Store[`options_${channel.id}`] = Store[`options_${channel.id}`] ||
+      (Store[`options_${channel.id}`] = this.getPreviousData(replacement)
+        .map(data => data.choice))
+
     let actionToResolve
 
-    console.log(payload)
+    console.log(channelChoices, action.name)
 
     if(action.name === 'i_want_this') {
       const choice = (channelChoices.find(a => a.id === user.id))
@@ -28,6 +33,12 @@ class KillSimplePoll {
       actionToResolve = Promise.resolve(replacement)
     }
 
+    if(action.name === 'finish') {
+      this.finish(replacement, channel)
+      actionToResolve = Promise.resolve(replacement)
+      console.log('asdasdasdas')
+    }
+
     return actionToResolve
       .then(() => {
         return replacement
@@ -35,13 +46,13 @@ class KillSimplePoll {
   }
 
   static refresh(replacement, channel) {
-    let options = Store[`options_${channel.id}`] || (Store[`options_${channel.id}`] = [])
-    let channelChoices = Store[`channelChoices_${channel.id}`] || (Store[`channelChoices_${channel.id}`] = [])
+    let options = Store[`options_${channel.id}`]
+    let channelChoices = Store[`channelChoices_${channel.id}`]
 
     replacement.attachments = options.map(opt => ({
       text: channelChoices
         .filter(ch => ch.choice === opt)
-        .map(ch => `:white_check_mark: <@${ch.id}>`)
+        .map(ch => `<@${ch.id}>`)
         .join('\n'),
       pretext: `People that wants *${opt}*:`,
       'callback_id': 'channel_wants_this',
@@ -64,10 +75,38 @@ class KillSimplePoll {
               text: 'Refresh Options',
               type: 'button',
               value: 'refresh'
+            },
+            {
+              name: 'finish',
+              text: 'Finish',
+              type: 'button',
+              value: 'finish'
             }
           ]
         }
       ])
+  }
+
+  static getPreviousData(replacement) {
+    return (replacement.attachments || [])
+      .filter(att => !!att.text)
+      .map(att => {
+        return att.text
+          .match(/\w+/g)
+          .map(id => ({id, choice: att.actions[0].value}))
+      })
+      .reduce((a,b) => a.concat(b), [])
+  }
+
+  static finish(replacement, channel) {
+    delete Store[`channelChoices_${channel.id}`]
+    delete Store[`options_${channel.id}`]
+
+    replacement.attachments = (replacement.attachments || [])
+      .filter(att => !!att.text)
+
+    replacement.attachments
+      .forEach(att => delete att.actions)
   }
 }
 

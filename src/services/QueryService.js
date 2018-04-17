@@ -18,12 +18,19 @@ class QueryService {
 
     switch(mainCommand || command) {
       case 'addOption':
-        let options = Store[`options_${reqProps.channelId}`] || (Store[`options_${reqProps.channelId}`] = [])
-        options.push(subCommand);
-        return Promise.resolve({
-          text: `you just added \`${subCommand}\` press \`Refresh Options\` to your changes to take effect`
-        });
+        let options = Store[`options_${reqProps.channelId}`];
+        if(options) {
+          options.push(subCommand);
+          return Promise.resolve({
+            text: `you just added \`${subCommand}\` press \`Refresh Options\` to your changes to take effect`
+          });
+        }
+        return Promise.resolve({text: 'there is no an active poll running'});
       case 'killSimplePoll':
+
+        Store[`channelChoices_${reqProps.channelId}`] = []
+        Store[`options_${reqProps.channelId}`] = []
+
         return Promise.resolve(MessageService.formatMessage('', {
           pretext: 'What do our team wants?',
           'callback_id': 'channel_wants_this',
@@ -90,7 +97,9 @@ class QueryService {
           text: `\`${reqProps.slashCommand} coffee\` => use it instead of using \`@channel coffee?\`\n` +
             `\`${reqProps.slashCommand} water\` => gets current couple selected to grab water\n` +
             `\`${reqProps.slashCommand} water getNext\` => gets next couple selected to grab water\n` +
-            `\`${reqProps.slashCommand} beerBashScore\` => call vote to rate last beerbash\n`
+            `\`${reqProps.slashCommand} beerBashScore\` => call vote to rate last beerbash\n` +
+            `\`${reqProps.slashCommand} killSimplePoll\` => call a dynamic poll\n` +
+            `\`${reqProps.slashCommand} addOption text\` => add an option to vote\n`
         }));
     }
   }
