@@ -14,7 +14,7 @@ class KillSimplePoll {
 
     let actionToResolve
 
-    console.log(channelChoices)
+    console.log(channelChoices, action.name)
 
     if(action.name === 'i_want_this') {
       const choice = (channelChoices.find(a => a.id === user.id))
@@ -36,6 +36,7 @@ class KillSimplePoll {
     if(action.name === 'finish') {
       this.finish(replacement, channel)
       actionToResolve = Promise.resolve(replacement)
+      console.log('asdasdasdas')
     }
 
     return actionToResolve
@@ -74,13 +75,7 @@ class KillSimplePoll {
               text: 'Refresh Options',
               type: 'button',
               value: 'refresh'
-            }
-          ]
-        },
-        {
-          text: '',
-          'callback_id': 'channel_wants_this',
-          actions: [
+            },
             {
               name: 'finish',
               text: 'Finish',
@@ -105,10 +100,13 @@ class KillSimplePoll {
 
   static finish(replacement, channel) {
     delete Store[`channelChoices_${channel.id}`]
-    delete Store[`options${channel.id}`]
+    delete Store[`options_${channel.id}`]
 
-    return (replacement.attachments || [])
-      .foreach(att => delete att.actions)
+    replacement.attachments = (replacement.attachments || [])
+      .filter(att => !!att.text)
+
+    replacement.attachments
+      .forEach(att => delete att.actions)
   }
 }
 
