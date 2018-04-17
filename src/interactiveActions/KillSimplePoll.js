@@ -14,7 +14,7 @@ class KillSimplePoll {
 
     let actionToResolve
 
-    console.log(payload)
+    console.log(channelChoices)
 
     if(action.name === 'i_want_this') {
       const choice = (channelChoices.find(a => a.id === user.id))
