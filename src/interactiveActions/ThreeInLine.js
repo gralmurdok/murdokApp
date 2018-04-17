@@ -47,7 +47,7 @@ class ThreeInLine {
         return Promise.resolve(replacement)
       }
 
-      currentPlayer = Store[`currentPlayer_${timestamp}`]
+      const nextPlayer = Store[`currentPlayer_${timestamp}`]
       game[value] = token
       const gameState = this.evaluateGame(game, token)
 
@@ -55,7 +55,7 @@ class ThreeInLine {
         .concat([
           {
             text: gameState === 'winner' ? `<@${currentPlayer}> has won the match` :
-              gameState === 'draw' ? 'DRAW' : `<@${currentPlayer}>'s turn`
+              gameState === 'draw' ? 'DRAW' : `<@${nextPlayer}>'s turn`
           }
         ])
       actionToResolve = Promise.resolve(replacement)
