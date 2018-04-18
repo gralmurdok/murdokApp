@@ -30,6 +30,10 @@ class ThreeInLine {
       actionToResolve = Promise.resolve(replacement)
     }
 
+    if(action.name === 'no_action') {
+      return Promise.resolve(replacement);
+    }
+
     if(action.name === 'set_value') {
       if(game.filter(x => !!x).length === 9
         || this.evaluateGame(game, 'x')
@@ -81,7 +85,7 @@ class ThreeInLine {
       text: '',
       'callback_id': 'three_in_line_game',
       actions: gameSet.map((num, col) => ({
-        name: 'set_value',
+        name: num ? 'no_action' : 'set_value',
         text: `${num || '#'}`,
         type: 'button',
         style: num === 'x' ? 'danger' : num === 'o' ? 'primary' : 'default',
