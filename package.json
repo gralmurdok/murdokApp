@@ -10,7 +10,7 @@
     "verifytoken": "./node_modules/.bin/slack-verify --token $VERIFY_TOKEN --path=$VERIFY_PATH --port=$PORT",
     "eslint": "eslint src/**",
     "build": "rimraf dist/ && babel ./src --out-dir dist/ --copy-files",
-    "start": "npm run eslint && npm run build && node dist/murdokApp.js"
+    "start": "node dist/murdokApp.js"
   },
   "author": "Luis Tinitana",
   "license": "ISC",
