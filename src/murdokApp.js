@@ -149,5 +149,5 @@ app.listen(port);
 console.log('Murdok app bothering you on port ' + port);
 
 setInterval(() => {
-  http.get("http://murdokapp.herokuapp.com");
+  http.get('http://murdokapp.herokuapp.com');
 }, 300000);
