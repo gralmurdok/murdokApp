@@ -10,6 +10,7 @@
     "verifytoken": "./node_modules/.bin/slack-verify --token $VERIFY_TOKEN --path=$VERIFY_PATH --port=$PORT",
     "eslint": "eslint src/**",
     "build": "rimraf dist/ && babel ./src --out-dir dist/ --copy-files",
+    "heroku-postbuild": "npm run eslint && npm run build",
     "start": "node dist/murdokApp.js"
   },
   "author": "Luis Tinitana",
