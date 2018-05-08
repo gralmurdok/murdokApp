@@ -1,3 +1,4 @@
+import http from 'http'
 import express from 'express';
 import bodyParser from 'body-parser';
 import TokenizerService from './services/TokenizerService';
@@ -146,3 +147,7 @@ slackClient.interactiveMessages.action('three_in_line_game', payload => {
 
 app.listen(port);
 console.log('Murdok app bothering you on port ' + port);
+
+setInterval(() => {
+  http.get("http://murdokapp.herokuapp.com");
+}, 300000);
